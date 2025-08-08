@@ -1,7 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
+import RecipeManager from './components/RecipeManager';
+import MealPlan from './components/MealPlan';
+import ShoppingList from './components/ShoppingList';
 
 function App() {
+  const [recipes, setRecipes] = useState([]);
+  const [plan, setPlan] = useState([]);
+
+  // Fetch recipes from backend
+  const fetchRecipes = async () => {
+    const res = await fetch('http://localhost:4000/api/recipes');
+    setRecipes(await res.json());
+  };
+  useEffect(() => { fetchRecipes(); }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -10,18 +23,15 @@ function App() {
       <main>
         <section>
           <h2>Meal Plan</h2>
-          {/* MealPlan component will go here */}
-          <div>Meal plan UI placeholder</div>
+          <MealPlan recipes={recipes} onPlanChange={setPlan} />
         </section>
         <section>
           <h2>Recipes</h2>
-          {/* RecipeManager component will go here */}
-          <div>Recipe management UI placeholder</div>
+          <RecipeManager />
         </section>
         <section>
           <h2>Shopping List</h2>
-          {/* ShoppingList component will go here */}
-          <div>Shopping list UI placeholder</div>
+          <ShoppingList plan={plan} recipes={recipes} />
         </section>
       </main>
     </div>
